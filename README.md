@@ -1,17 +1,6 @@
 # Awesome One-Step Generation
 
-![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)  
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)  
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-
-*"Nature is pleased with simplicity."*  
-— Isaac Newton
-
-A curated list of papers, code, and resources for **one-step diffusion models** — methods that turn noise into high-quality samples in a *single* neural network forward pass.
-
----
-
-## 🧭 Classification Rationale
+🧭 Classification Rationale
 
 Instead of the usual *native vs. distillation* split, we group methods by **the core mathematical principle that collapses iterative sampling into one step**. Each paper is placed by its *primary contribution*, with cross-references for works that span multiple principles.
 
@@ -22,7 +11,7 @@ Instead of the usual *native vs. distillation* split, we group methods by **the 
 | 🟡 **Hybrid**  | Supports both native training and distillation                               |
 
 > [!NOTE]
-> 从[原github项目](https://github.com/Luciferbobo/Awesome-One-Step-Generation)复制来的框架，后文中所有蓝色note栏是我写的理解和笔记
+> 从[原github项目](https://github.com/Luciferbobo/Awesome-One-Step-Generation)复制来的框架，后文中所有蓝色note栏是我写的理解和笔记  
 > **1. Consistency Models (一致性模型)**
 > - **工程机制：** 在模型训练中引入一致性损失，强行约束模型在同一条去噪常微分方程 (ODE) 轨迹上，能够从任意时间节点直接计算出相同的终点图像。
 > - **数学本质：** 对于轨迹上的任意两点 x_t和 x_{t'}（两个时间点是相邻的），网络映射必须相同。
