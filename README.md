@@ -220,9 +220,19 @@ Maximum-likelihood (forward-KL) distillation via an Expectation-Maximization for
 - **One-step Diffusion with Distribution Matching Distillation (DMD)** [CVPR 2024] 🔵  
 [[Paper](https://arxiv.org/abs/2311.18828)]  
 Learning score functions of real and fake distributions for reverse-KL distribution matching.
+
+> [!NOTE]
+> 核心在于匹配宏观概率分布：训练时把生成图加噪，分别送入冻结的老师网络和持续学习的代理网络，一个估计目标分布的 score，一个估计学生当前生成分布的 score。  
+> 两个 score 的方向差就是反向 KL 散度的梯度：老师把图像拉向目标分布，代理网络把图像从学生已经占据的模式推开，减少模式坍塌。原论文还用预先生成的“噪声-老师图像”pair做 LPIPS 回归，保住图像的整体结构并稳定训练。
+
 - **Improved Distribution Matching Distillation (DMD2)** [NeurIPS 2024 Oral] 🔵  
 [[Paper](https://arxiv.org/abs/2405.14867)] [[Code](https://github.com/tianweiy/dmd2)]  
 Improved DMD that removes the costly regression loss.
+
+> [!NOTE]
+> DMD 去掉回归 loss 后会不稳定，根本原因是学生的生成分布一直在变，代理网络跟不上，估计出的 fake score 不准。DMD2 采用双时间尺度更新：代理网络多更新几次，才更新一次学生模型，因此能删掉昂贵的离线 pair 和回归 loss。  
+> 在此基础上，DMD2 给代理网络增加 GAN 判别分支，直接比较真实图像和学生图像，弥补老师 score 的误差；还用 backward simulation 模拟推理时的中间输入，从而支持多步生成。
+
 - **One-step Diffusion Models with f-Divergence Distribution Matching (f-distill)** [2025] 🔵  
 [[Paper](https://arxiv.org/abs/2502.15681)]  
 A generalized f-divergence framework subsuming reverse-KL distribution matching.
@@ -292,6 +302,10 @@ Combines progressive and adversarial distillation for one-step 1024px text-to-im
 - **TwinFlow: Realizing One-step Generation with Self-adversarial Flows** [ICLR 2026] 🟢  
 [[Paper](https://arxiv.org/abs/2512.05150)] [[Code](https://github.com/inclusionAI/TwinFlow)]  
 Self-adversarial flow framework without fixed auxiliary models for one-step generation.
+
+> [!NOTE]
+> 把普通 Flow Matching 的时间范围从 `[0,1]` 扩展到 `[-1,1]`：正时间分支学习噪声到真实数据的轨迹，负时间分支学习噪声到模型自己生成的 fake 数据的轨迹。  
+> 同一个网络用时间正负区分 real/fake 速度场，两个速度的方向差就是“自对抗”信号，用它把真实轨迹拉直，使一个大步长就能到达数据。因此不需要冻结的老师、额外的 fake-score 网络或 GAN 判别器，更容易扩展到大模型。
 
 ---
 
@@ -426,6 +440,10 @@ Unifies SiD, FGM, and IBMD through inverse optimization, enabling one-step disti
 
 > [!NOTE]
 > 在模型蒸馏的过程中加入了真实图像数据，通过loss function定义学习目标，让代理网络学习学生网络与老师网络的方向差，作为梯度，引导学生网络向正确方向移动。这篇工作的重点在于用数学结构类似的公式，不只学习老师网络产生的结果，也能学习真实数据。
+
+![d7c730d5801bcfd84cb80ce113bc9084](./images/d7c730d5801bcfd84cb80ce113bc9084.jpg)
+
+![4803aded28b024ee5baa93e5e1204ecc](./images/4803aded28b024ee5baa93e5e1204ecc.jpg)
 
 - **Uni-Instruct: One-step Diffusion Model through Unified Diffusion Divergence Instruction** [NeurIPS 2025]  
 [[Paper](https://arxiv.org/abs/2505.20755)]  
