@@ -222,16 +222,20 @@ Maximum-likelihood (forward-KL) distillation via an Expectation-Maximization for
 Learning score functions of real and fake distributions for reverse-KL distribution matching.
 
 > [!NOTE]
-> 核心在于匹配宏观概率分布：训练时把生成图加噪，分别送入冻结的老师网络和持续学习的代理网络，一个估计目标分布的 score，一个估计学生当前生成分布的 score。  
-> 两个 score 的方向差就是反向 KL 散度的梯度：老师把图像拉向目标分布，代理网络把图像从学生已经占据的模式推开，减少模式坍塌。原论文还用预先生成的“噪声-老师图像”pair做 LPIPS 回归，保住图像的整体结构并稳定训练。
+> DMD—**Distribution Matching Distillation：**核心在于匹配宏观概率分布-通过KL散度衡量分布的相近程度-KL散度是Intractable的-重参数化（把学生网络产生的图片加噪后输入老师网络和代理网络）-转化为score相减-转化为真假网络产生的图片逐像素相减。
+> 训练时把生成图（学生模型）加噪，分别送入老师网络和代理网络，一个估计目标分布的 score，一个估计学生当前生成分布的 score。  
+> 两个 score 的方向差正比于反向 KL 散度的梯度：老师模型产生指向真实图片分布概率大的向量，代理模型指向假图像分布概率高的地方，两者相减避免模式坍塌。原论文还用预先生成的“噪声-老师图像”pair做 LPIPS 回归（和轨迹匹配接近），保住图像的整体结构并稳定训练。
+
+![d5afa9d42f4c8dc366bff5ec3c7e6445](./images/d5afa9d42f4c8dc366bff5ec3c7e6445.jpg)
+
+![ebbcb4a4657da64670a9d413732571c7](./images/ebbcb4a4657da64670a9d413732571c7.jpg)
 
 - **Improved Distribution Matching Distillation (DMD2)** [NeurIPS 2024 Oral] 🔵  
 [[Paper](https://arxiv.org/abs/2405.14867)] [[Code](https://github.com/tianweiy/dmd2)]  
 Improved DMD that removes the costly regression loss.
 
 > [!NOTE]
-> DMD 去掉回归 loss 后会不稳定，根本原因是学生的生成分布一直在变，代理网络跟不上，估计出的 fake score 不准。DMD2 采用双时间尺度更新：代理网络多更新几次，才更新一次学生模型，因此能删掉昂贵的离线 pair 和回归 loss。  
-> 在此基础上，DMD2 给代理网络增加 GAN 判别分支，直接比较真实图像和学生图像，弥补老师 score 的误差；还用 backward simulation 模拟推理时的中间输入，从而支持多步生成。
+>
 
 - **One-step Diffusion Models with f-Divergence Distribution Matching (f-distill)** [2025] 🔵  
 [[Paper](https://arxiv.org/abs/2502.15681)]  
