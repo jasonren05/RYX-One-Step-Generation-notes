@@ -234,6 +234,10 @@ A generalized f-divergence framework subsuming reverse-KL distribution matching.
 - **Score identity Distillation (SiD)** [ICML 2024] 🔵  
 [[Paper](https://arxiv.org/abs/2404.04057)] [[Code](https://github.com/mingyuanzhou/SiD)]  
 Data-free score-identity matching for exponentially fast distillation.
+
+> [!NOTE]
+> 通过引入一个代理网络（衡量老师和学生之间的差距），把原来intractable的loss function变成了代理网络和学生网络交替训练。
+
 - **One-Step Diffusion Distillation through Score Implicit Matching (SIM)** [NeurIPS 2024] 🔵  
 [[Paper](https://arxiv.org/abs/2410.16794)] [[Code](https://github.com/maple-research-lab/SIM)]  
 Score implicit matching that preserves the teacher's denoising capability.
@@ -416,6 +420,13 @@ Distilling pretrained diffusion policies into single-step policies for robot con
 
 ## Unified Theory
 
+- **Universal Inverse Distillation for Matching Models with Real-Data Supervision (RealUID)** [ICLR 2026] 🔵  
+[[Paper](https://arxiv.org/abs/2509.22459)] [[Code](https://github.com/David-cripto/RealUID)]  
+Unifies SiD, FGM, and IBMD through inverse optimization, enabling one-step distillation of diffusion, flow, bridge-matching, and stochastic-interpolant models with direct real-data supervision and no GAN discriminator.
+
+> [!NOTE]
+> 在模型蒸馏的过程中加入了真实图像数据，通过loss function定义学习目标，让代理网络学习学生网络与老师网络的方向差，作为梯度，引导学生网络向正确方向移动。这篇工作的重点在于用数学结构类似的公式，不只学习老师网络产生的结果，也能学习真实数据。
+
 - **Uni-Instruct: One-step Diffusion Model through Unified Diffusion Divergence Instruction** [NeurIPS 2025]  
 [[Paper](https://arxiv.org/abs/2505.20755)]  
 A unified theoretical framework proving 10+ existing distillation methods are special cases of diffusion divergence minimization.
@@ -462,6 +473,7 @@ Theoretical analysis of supervision signal variance for designing one-step flow 
 | 2025.10 | Diffusion Adversarial Post-Training for One-Step Video Generation                              | ICML 2025           | 🔵   | APP      | [[Paper](https://arxiv.org/abs/2501.08316)]                                                                                                                                                                   |
 | 2025.10 | Any-step Generation via RCGM                                                                   | ICLR 2026           | 🟢   | CM       | [[Paper](https://openreview.net/forum?id=RCGM)] [[Code](https://github.com/LINs-lab/RCGM)]                                                                                                                    |
 | 2025.09 | SANA-Sprint: One-Step Diffusion with Continuous-Time Consistency Distillation                  | ICCV 2025           | 🔵   | CM       | [[Paper](https://arxiv.org/abs/2503.09641)]                                                                                                                                                                   |
+| 2025.09 | Universal Inverse Distillation for Matching Models with Real-Data Supervision (RealUID)        | ICLR 2026           | 🔵   | TH       | [[Paper](https://arxiv.org/abs/2509.22459)] [[Code](https://github.com/David-cripto/RealUID)]                                                                                                                 |
 | 2025.07 | Score-of-Mixture Training                                                                      | ICML 2025 Spotlight | 🟢   | DDM      | [[Paper](https://arxiv.org/abs/2502.09609)]                                                                                                                                                                   |
 | 2025.06 | Noise Consistency Training (NCT)                                                               | NeurIPS 2025        | 🟢   | SC       | [[Paper](https://arxiv.org/abs/2506.19741)] [[Code](https://github.com/Luo-Yihong/NCT)]                                                                                                                       |
 | 2025.06 | Align Your Flow: Scaling Continuous-Time Flow Map Distillation                                 | NeurIPS 2025        | 🔵   | FS       | [[Paper](https://arxiv.org/abs/2506.14603)]                                                                                                                                                                   |
