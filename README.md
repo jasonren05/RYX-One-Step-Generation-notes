@@ -220,9 +220,23 @@ Maximum-likelihood (forward-KL) distillation via an Expectation-Maximization for
 - **One-step Diffusion with Distribution Matching Distillation (DMD)** [CVPR 2024] 🔵  
 [[Paper](https://arxiv.org/abs/2311.18828)]  
 Learning score functions of real and fake distributions for reverse-KL distribution matching.
+
+> [!NOTE]
+> DMD—**Distribution Matching Distillation：**核心在于匹配宏观概率分布-通过KL散度衡量分布的相近程度-KL散度是Intractable的-重参数化（把学生网络产生的图片加噪后输入老师网络和代理网络）-转化为score相减-转化为真假网络产生的图片逐像素相减。
+> 训练时把生成图（学生模型）加噪，分别送入老师网络和代理网络，一个估计目标分布的 score，一个估计学生当前生成分布的 score。  
+> 两个 score 的方向差正比于反向 KL 散度的梯度：老师模型产生指向真实图片分布概率大的向量，代理模型指向假图像分布概率高的地方，两者相减避免模式坍塌。原论文还用预先生成的“噪声-老师图像”pair做 LPIPS 回归（和轨迹匹配接近），保住图像的整体结构并稳定训练。
+
+![d5afa9d42f4c8dc366bff5ec3c7e6445](./images/d5afa9d42f4c8dc366bff5ec3c7e6445.jpg)
+
+![ebbcb4a4657da64670a9d413732571c7](./images/ebbcb4a4657da64670a9d413732571c7.jpg)
+
 - **Improved Distribution Matching Distillation (DMD2)** [NeurIPS 2024 Oral] 🔵  
 [[Paper](https://arxiv.org/abs/2405.14867)] [[Code](https://github.com/tianweiy/dmd2)]  
 Improved DMD that removes the costly regression loss.
+
+> [!NOTE]
+>
+
 - **One-step Diffusion Models with f-Divergence Distribution Matching (f-distill)** [2025] 🔵  
 [[Paper](https://arxiv.org/abs/2502.15681)]  
 A generalized f-divergence framework subsuming reverse-KL distribution matching.
@@ -234,6 +248,10 @@ A generalized f-divergence framework subsuming reverse-KL distribution matching.
 - **Score identity Distillation (SiD)** [ICML 2024] 🔵  
 [[Paper](https://arxiv.org/abs/2404.04057)] [[Code](https://github.com/mingyuanzhou/SiD)]  
 Data-free score-identity matching for exponentially fast distillation.
+
+> [!NOTE]
+> 通过引入一个代理网络（衡量老师和学生之间的差距），把原来intractable的loss function变成了代理网络和学生网络交替训练。
+
 - **One-Step Diffusion Distillation through Score Implicit Matching (SIM)** [NeurIPS 2024] 🔵  
 [[Paper](https://arxiv.org/abs/2410.16794)] [[Code](https://github.com/maple-research-lab/SIM)]  
 Score implicit matching that preserves the teacher's denoising capability.
@@ -288,6 +306,10 @@ Combines progressive and adversarial distillation for one-step 1024px text-to-im
 - **TwinFlow: Realizing One-step Generation with Self-adversarial Flows** [ICLR 2026] 🟢  
 [[Paper](https://arxiv.org/abs/2512.05150)] [[Code](https://github.com/inclusionAI/TwinFlow)]  
 Self-adversarial flow framework without fixed auxiliary models for one-step generation.
+
+> [!NOTE]
+> 把普通 Flow Matching 的时间范围从 `[0,1]` 扩展到 `[-1,1]`：正时间分支学习噪声到真实数据的轨迹，负时间分支学习噪声到模型自己生成的 fake 数据的轨迹。  
+> 同一个网络用时间正负区分 real/fake 速度场，两个速度的方向差就是“自对抗”信号，用它把真实轨迹拉直，使一个大步长就能到达数据。因此不需要冻结的老师、额外的 fake-score 网络或 GAN 判别器，更容易扩展到大模型。
 
 ---
 
@@ -416,6 +438,17 @@ Distilling pretrained diffusion policies into single-step policies for robot con
 
 ## Unified Theory
 
+- **Universal Inverse Distillation for Matching Models with Real-Data Supervision (RealUID)** [ICLR 2026] 🔵  
+[[Paper](https://arxiv.org/abs/2509.22459)] [[Code](https://github.com/David-cripto/RealUID)]  
+Unifies SiD, FGM, and IBMD through inverse optimization, enabling one-step distillation of diffusion, flow, bridge-matching, and stochastic-interpolant models with direct real-data supervision and no GAN discriminator.
+
+> [!NOTE]
+> 在模型蒸馏的过程中加入了真实图像数据，通过loss function定义学习目标，让代理网络学习学生网络与老师网络的方向差，作为梯度，引导学生网络向正确方向移动。这篇工作的重点在于用数学结构类似的公式，不只学习老师网络产生的结果，也能学习真实数据。
+
+![d7c730d5801bcfd84cb80ce113bc9084](./images/d7c730d5801bcfd84cb80ce113bc9084.jpg)
+
+![4803aded28b024ee5baa93e5e1204ecc](./images/4803aded28b024ee5baa93e5e1204ecc.jpg)
+
 - **Uni-Instruct: One-step Diffusion Model through Unified Diffusion Divergence Instruction** [NeurIPS 2025]  
 [[Paper](https://arxiv.org/abs/2505.20755)]  
 A unified theoretical framework proving 10+ existing distillation methods are special cases of diffusion divergence minimization.
@@ -462,6 +495,7 @@ Theoretical analysis of supervision signal variance for designing one-step flow 
 | 2025.10 | Diffusion Adversarial Post-Training for One-Step Video Generation                              | ICML 2025           | 🔵   | APP      | [[Paper](https://arxiv.org/abs/2501.08316)]                                                                                                                                                                   |
 | 2025.10 | Any-step Generation via RCGM                                                                   | ICLR 2026           | 🟢   | CM       | [[Paper](https://openreview.net/forum?id=RCGM)] [[Code](https://github.com/LINs-lab/RCGM)]                                                                                                                    |
 | 2025.09 | SANA-Sprint: One-Step Diffusion with Continuous-Time Consistency Distillation                  | ICCV 2025           | 🔵   | CM       | [[Paper](https://arxiv.org/abs/2503.09641)]                                                                                                                                                                   |
+| 2025.09 | Universal Inverse Distillation for Matching Models with Real-Data Supervision (RealUID)        | ICLR 2026           | 🔵   | TH       | [[Paper](https://arxiv.org/abs/2509.22459)] [[Code](https://github.com/David-cripto/RealUID)]                                                                                                                 |
 | 2025.07 | Score-of-Mixture Training                                                                      | ICML 2025 Spotlight | 🟢   | DDM      | [[Paper](https://arxiv.org/abs/2502.09609)]                                                                                                                                                                   |
 | 2025.06 | Noise Consistency Training (NCT)                                                               | NeurIPS 2025        | 🟢   | SC       | [[Paper](https://arxiv.org/abs/2506.19741)] [[Code](https://github.com/Luo-Yihong/NCT)]                                                                                                                       |
 | 2025.06 | Align Your Flow: Scaling Continuous-Time Flow Map Distillation                                 | NeurIPS 2025        | 🔵   | FS       | [[Paper](https://arxiv.org/abs/2506.14603)]                                                                                                                                                                   |
