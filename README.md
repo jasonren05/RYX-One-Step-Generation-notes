@@ -222,20 +222,23 @@ Maximum-likelihood (forward-KL) distillation via an Expectation-Maximization for
 Learning score functions of real and fake distributions for reverse-KL distribution matching.
 
 > [!NOTE]
-> DMD—**Distribution Matching Distillation：**核心在于匹配宏观概率分布-通过KL散度衡量分布的相近程度-KL散度是Intractable的-重参数化（把学生网络产生的图片加噪后输入老师网络和代理网络）-转化为score相减-转化为真假网络产生的图片逐像素相减。
+> DMD—**Distribution Matching Distillation：**核心在于匹配宏观概率分布-通过KL散度衡量分布的相近程度-KL散度是Intractable的-重参数化（把学生网络产生的图片加噪后输入老师网络和代理网络）-转化为score相减-转化为真假网络产生的图片逐像素相减。  
 > 训练时把生成图（学生模型）加噪，分别送入老师网络和代理网络，一个估计目标分布的 score，一个估计学生当前生成分布的 score。  
 > 两个 score 的方向差正比于反向 KL 散度的梯度：老师模型产生指向真实图片分布概率大的向量，代理模型指向假图像分布概率高的地方，两者相减避免模式坍塌。原论文还用预先生成的“噪声-老师图像”pair做 LPIPS 回归（和轨迹匹配接近），保住图像的整体结构并稳定训练。
 
-![d5afa9d42f4c8dc366bff5ec3c7e6445](./images/d5afa9d42f4c8dc366bff5ec3c7e6445.jpg)
-
-![ebbcb4a4657da64670a9d413732571c7](./images/ebbcb4a4657da64670a9d413732571c7.jpg)
+![d5afa9d42f4c8dc366bff5ec3c7e6445](./images/d5afa9d42f4c8dc366bff5ec3c7e6445.jpg)![ebbcb4a4657da64670a9d413732571c7](./images/ebbcb4a4657da64670a9d413732571c7.jpg)
 
 - **Improved Distribution Matching Distillation (DMD2)** [NeurIPS 2024 Oral] 🔵  
 [[Paper](https://arxiv.org/abs/2405.14867)] [[Code](https://github.com/tianweiy/dmd2)]  
 Improved DMD that removes the costly regression loss.
 
+![image](./images/pasted_20260719-013924.png)
+
 > [!NOTE]
->
+> 在DMD的基础上主要做出了3点改进：  
+> 1.去除了 regression loss，完全舍弃了 trajectory matching。  
+> 2.学生网络每更新 1 次，fake 网络更新 5 次。  
+> 3.增加了GAN判别器，在 fake 网络提取特征后通过GAN回传梯度。
 
 - **One-step Diffusion Models with f-Divergence Distribution Matching (f-distill)** [2025] 🔵  
 [[Paper](https://arxiv.org/abs/2502.15681)]  
@@ -445,9 +448,7 @@ Unifies SiD, FGM, and IBMD through inverse optimization, enabling one-step disti
 > [!NOTE]
 > 在模型蒸馏的过程中加入了真实图像数据，通过loss function定义学习目标，让代理网络学习学生网络与老师网络的方向差，作为梯度，引导学生网络向正确方向移动。这篇工作的重点在于用数学结构类似的公式，不只学习老师网络产生的结果，也能学习真实数据。
 
-![d7c730d5801bcfd84cb80ce113bc9084](./images/d7c730d5801bcfd84cb80ce113bc9084.jpg)
-
-![4803aded28b024ee5baa93e5e1204ecc](./images/4803aded28b024ee5baa93e5e1204ecc.jpg)
+![d7c730d5801bcfd84cb80ce113bc9084](./images/d7c730d5801bcfd84cb80ce113bc9084.jpg)![4803aded28b024ee5baa93e5e1204ecc](./images/4803aded28b024ee5baa93e5e1204ecc.jpg)
 
 - **Uni-Instruct: One-step Diffusion Model through Unified Diffusion Divergence Instruction** [NeurIPS 2025]  
 [[Paper](https://arxiv.org/abs/2505.20755)]  
