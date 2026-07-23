@@ -425,14 +425,14 @@ Parameter-efficient dual-expert consistency decoupling semantics and details.
 Self-rollout training for real-time autoregressive video diffusion, compatible with SiD, GAN, and DMD objectives.
 
 > [!NOTE]
-> 传统 视频生成模型在训练时使用真实历史帧，而推理时只能使用模型自己生成的帧，难以有效纠正误差。Self Forcing 在训练时就通过 KV cache 做 autoregressive self-rollout，让模型基于自己前面生成的结果继续生成，再对整段视频计算 loss；同时用 stochastic gradient truncation 控制显存和计算量。核心在于消除 train-test gap，可以和 SiD、GAN、DMD 结合；如何对整段视频计算loss？
+> 传统视频生成模型在训练时使用真实画面作为输入，而推理时只能使用模型自己生成的帧，难以有效纠正模型以往产生的误差。Self Forcing在训练时就通过 KV-cache做autoregressive self-rollout，让模型基于自己前面生成的结果继续生成，再对整段视频计算 loss；同时用 stochastic gradient truncation 控制显存和计算量。核心在于消除 train-test gap，可以和 SiD、GAN、DMD 结合（用于在整个视频的维度计算loss）。
 
 - **AAD-1: Asymmetric Adversarial Distillation for One-Step Autoregressive Video Generation** [ICML 2026] 🔵  
 [[Paper](https://arxiv.org/abs/2606.03972)] [[Code](https://github.com/AutoLab-SAI-SJTU/AAD-1)] [[Project](https://aad-1.github.io/)]  
 One-step-per-chunk autoregressive image-to-video generation with a causal generator, a bidirectional video-level discriminator, and a self-rollout DMD warmup.
 
 > [!NOTE]
-> 一步自回归视频直接做 GAN 训练容易发生motion collapse即生成的视频清晰但几乎不动。AAD-1 让生成器保持 causal ，让只在训练中使用的判别器双向观察完整视频并输出一个对完整视频有效的，从而发现单帧判别器看不出的运动消失问题；训练时先做 ODE 初始化和 Self-Forcing DMD warmup，在学生分布和老师分布比较接近的时候再加入 GAN。
+> 一步自回归视频直接做 GAN 训练容易发生motion collapse即生成的视频清晰但几乎不动。AAD-1 中，生成器保持 causal ，但判别器可以看到完整视频并输出一个对完整视频的打分（Asymmetric），从而发现因果看不出的问题；训练时先做 ODE 初始化和 Self-Forcing DMD warmup，在学生分布和老师分布比较接近的时候再加入 GAN。
 
 ### 3D Generation
 
